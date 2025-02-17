@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Flask App</title>
+    <script defer src="//unpkg.com/mathlive"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+</head>
+<body>
+    <h1>Welcome to Integrate IQ</h1>
+
+    <math-field id="mf">Enter Integral</math-field>
+
+    <math-field id="sf">Enter Solution</math-field>
+    
+    <form id="problemForm">
+        <div>
+            <label for="source">Source:</label>
+            <input type="text" id="source" name="source" required>
+        </div>
+        
+        <div>
+            <label for="tags">Category/Tags:</label>
+            <input type="text" id="tags" name="tags" placeholder="Separate tags with commas" required>
+        </div>
+        
+        <div>
+            <label for="difficulty">Difficulty:</label>
+            <select id="difficulty" name="difficulty" required>
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+        </div>
+        
+        <div>
+            <button type="submit">Submit Problem</button>
+        </div>
+    </form>
+
+    <script>
+        const mf = document.getElementById('mf');
+        const sf = document.getElementById('sf');
+        const form = document.getElementById('problemForm');
+        const formElements = form.elements;
+
+        $('#problemForm').on('submit', function(e) {
+            e.preventDefault();
+            $.ajax({
+                url: '/submit-problem',
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    'equation': mf.value,
+                    'solution': sf.value,
+                    'source': formElements.source.value,
+                    'tags': formElements.tags.value,
+                    'difficulty': formElements.difficulty.value
+                }),
+                success: (result) => {
+                    console.log("Success");
+                    // Reset the form after successful submission
+                    form.reset();
+                    // Or clear specific fields if reset() doesn't work with math-fields
+                    mf.value = 'Enter Integral';
+                    sf.value = 'Enter Solution';
+                },
+                error: (error) => {
+                    console.log("Error");
+                }
+            });
+        });
+
+    </script>
+
+</body>
+</html>
