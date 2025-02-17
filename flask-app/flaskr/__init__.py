@@ -49,9 +49,6 @@ def create_app():
             
             return jsonify({'message': 'Problem saved successfully'}), 200
 
-            return jsonify({
-                'success': True
-            })
         except:
             print('Error')
 
